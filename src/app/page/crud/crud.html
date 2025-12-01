@@ -1,0 +1,91 @@
+<!-- src/app/page/crud/crud.html -->
+
+<div class="container">
+  <h1>Student Management System</h1>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search students..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()"
+    />
+  </div>
+
+  <!-- Form -->
+  <div class="form-card">
+    <h2>{{ editingId === null ? 'Add Student' : 'Edit Student' }}</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <label>First Name</label>
+        <input type="text" [(ngModel)]="firstName" name="firstName" required />
+      </div>
+
+      <div class="form-row">
+        <label>Middle Name</label>
+        <input type="text" [(ngModel)]="middleName" name="middleName" />
+      </div>
+
+      <div class="form-row">
+        <label>Last Name</label>
+        <input type="text" [(ngModel)]="lastName" name="lastName" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ editingId === null ? 'Add Student' : 'Save Changes' }}
+        </button>
+        <button type="button" class="secondary" *ngIf="editingId !== null" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <h2>Students</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Last Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of pagedStudents">
+          <td>{{ s.id }}</td>
+          <td>{{ s.firstName }}</td>
+          <td>{{ s.middleName }}</td>
+          <td>{{ s.lastName }}</td>
+          <td>
+            <button type="button" (click)="startEdit(s)">Edit</button>
+            <button type="button" class="danger" (click)="deleteStudent(s.id)">Delete</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="pagedStudents.length === 0">
+          <td colspan="5" class="empty">No students found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination (only if > 5 students) -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">‹ Prev</button>
+
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+      <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        Next ›
+      </button>
+    </div>
+  </div>
+</div>
